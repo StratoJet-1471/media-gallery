@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<% if (result==resultVariants.SUCCESS) { %>
+<script language="javascript">
+    setTimeout('window.location="<%= redirTargetPage %>"', 6000);
+</script>
+<% } %> 
+<style type="text/css">
+    body {
+    <% if (result==resultVariants.SUCCESS) { %>
+        background-color: rgb(201, 223, 248);
+    <% } else { %>
+        background-color: rgb(255, 215, 0);
+    <% } %>
+        color: rgb(43, 41, 41);
+        font-size: 23px;
+    }
+    a {
+        color: rgb(14, 82, 170);
+    }
+    div {
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+<head>
+    <title>Ваш аккаунт на <%= domain %>"> успешно активирован!</title>
+</head>
+<body>
+    <div>
+        <% if (result==resultVariants.SUCCESS) { %>
+            <span>Ваш аккаунт, <%= username %>, успешно активирован!</span>
+            <span>Через несколько секунд вы будете автоматически перенаправлены на входную страницу <%= domain %>.</span>
+            </span>Если ваш браузер не поддерживает автоматическую переадресацию, перейдите по <a href='<%= redirTargetPage %>'>ссылке<a/></span>
+        <% } else if (result==resultVariants.PRE_USER_ID_INCORRECT) { %>
+            <span><font color=#FF0000>Ошибка адреса в активационной ссылке! Активация по этой ссылке невозможна.</font></span>
+            <span>Зарегистрируйте новый аккаунт с другими данными, либо напишите с этого же email о проблеме на <a href="mailto:<%= email %>"><%= email %></a>,</span>
+            <span>полностью процитировав активационное письмо, и мы вышлем вам новую ссылку или активируем аккаунт вручную.</span>
+        <% } else if (result==resultVariants.PRE_USER_ID_NOT_FOUND) { %>
+            <span><font color=#FF0000>Активационная ссылка недействительна.</font></span>
+            <span>Либо активационная ссылка просрочена, либо аккаунт уже активирован.</span>
+        <% } else if (result==resultVariants.LINK_EXPIRED) { %>
+            <span><font color=#FF0000>Активационная ссылка просрочена!</font></span>
+            <span>Сожалеем, вам придётся зарегистрировать новый аккаунт.</span>
+        <% } else if (result==resultVariants.PRE_USERS_TABLE_READING_ERROR) { %>
+            <span><font color=#FF0000>Ошибка чтения из базы данных!</font></span>
+            <span>Пожалуйста, повторите попытку активации немного позже.</span>
+        <% } else if (result==resultVariants.PRE_USERS_TABLE_DATA_DELETION_ERROR) { %>
+            <span><font color=#FF0000>Ошибка базы данных!</font></span>
+            <span>Пожалуйста, повторите попытку активации немного позже.</span>
+        <% } else if (result==resultVariants.USERS_TABLE_UPDATE_ERROR) { %>
+            <span><font color=#FF0000>Критическая ошибка базы данных! Регистрационные данные потеряны.</font></span>
+            <span>К сожалению, вам придётся регистрировать аккаунт заново. Примите наши сожаления...</span>
+        <% } else if (result==resultVariants.USER_FOLDER_CREATION_ERROR || result==resultVariants.USER_FOLDER_ALREADY_EXISTS) { %>
+            <span><font color=#FF0000>Ошибка при создании Галереи!</font></span>
+            <span>К сожалению, вы временно не сможете загружать файлы в вашу Галерею. Мы постараемся устранить сбой в течение суток.</span>
+            <span>Если проблема не исчезнет, пожалуйста, сообщите с этого же email на <a href="mailto:<%= email %>">"><%= email %>"></a></span>
+        <% } else if (result==resultVariants.TECH_WORKS) { %>
+            <span><font color=#008000>Ведутся технические работы.</font></span>
+            <span>В настоящий момент активация аккаунтов невозможна. Попробуйте немного позже.</span>
+            <span>Сожалеем о причинённых неудобствах.</span>
+        <% } %>
+    </div>
+</body>
