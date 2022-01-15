@@ -24,6 +24,8 @@ const limits = {   //We recommend importing as LIMITS
     get inPopup_liElsMaxCount() { return 5; },
     get inPopup_fNameMaxLength() { return 30; },
     get inPopup_fRenaming_maxNewFNameLength() { return 42; },
+
+    get glrAlbumInvalidCharsRegExp() { return /[^ёЁA-Za-zА-Яа-я0-9 _-]/g; }, //Выражение означает, что запрещены все символы, кроме перечисленных.
 };
 
 const defaults = { //We recommend importing as DEFAULTS

@@ -8,8 +8,8 @@ class MediaGalleryServer {
             siteDesignElementsUrlPath, 
             galleryImagesUrlPath,            
             siteDesignElementsFolder,
-            defaultCurrentGalleryFolder = "Main",
-            galleryFolderRegExp = /[^ёЁA-Za-zА-Яа-я0-9 _-]/g,
+            userInitialAlbum,
+            userAlbumInvalidCharsRegExp,
 
             apiUrls: {
                 apiUrl_signingIn,
@@ -17,7 +17,7 @@ class MediaGalleryServer {
                 apiUrl_preRegistration,
                 apiUrl_accActivation,
                 apiUrl_fileRenaming,
-                apiUrl_readGallery,
+                apiUrl_readAlbum,
                 apiUrl_flsUploading,
                 apiUrl_flsUplOverwriting,
                 apiUrl_flsRemoving,
@@ -26,15 +26,15 @@ class MediaGalleryServer {
                 apiUrl_flsDownloading,
             },
 
-            cookieForFilesRemoving = "flsRemFolder",
-            cookieForFilesUploading = "flsUplFolder",
-            cookieForFilesOverwriting = "flsOverwritingFolder",
-            cookieForFileRenaming = "fileRenamFolder",
-            cookieForFilesDownloading = "flsDownloadFolder",
+            cookieForFilesRemoving,
+            cookieForFilesUploading,
+            cookieForFilesOverwriting,
+            cookieForFileRenaming,
+            cookieForFilesDownloading,
 
             tokenParams: {
                 secretKeyForToken,
-                tokenName = "usertoken",
+                tokenName,
                 tokenValidityPeriod = "30min",
             },
 
@@ -110,7 +110,7 @@ class MediaGalleryServer {
             checkAuth: this._validateParam_apiUrl(apiUrl_checkAuth, "apiUrl_checkAuth"),
             preRegistration: this._validateParam_apiUrl(apiUrl_preRegistration, "apiUrl_preRegistration"),
             fileRenaming: this._validateParam_apiUrl(apiUrl_fileRenaming, "apiUrl_fileRenaming"),
-            readGallery: this._validateParam_apiUrl(apiUrl_readGallery, "apiUrl_readGallery"),
+            readGallery: this._validateParam_apiUrl(apiUrl_readAlbum, "apiUrl_readAlbum"),
             flsUploading: this._validateParam_apiUrl(apiUrl_flsUploading, "apiUrl_flsUploading"),
             flsUplOverwriting: this._validateParam_apiUrl(apiUrl_flsUplOverwriting, "apiUrl_flsUplOverwriting"),
             flsRemoving: this._validateParam_apiUrl(apiUrl_flsRemoving, "apiUrl_flsRemoving"),
@@ -122,7 +122,7 @@ class MediaGalleryServer {
 
         this._domain = this._validateParam_domain(domain);
         this._email = this._validateParam_email(email, emailPatternRegExp);
-        this._defaultCurrentGalleryFolder = this._validateParam_galleryFolder(defaultCurrentGalleryFolder, "defaultCurrentGalleryFolder", galleryFolderRegExp);
+        this._userInitialAlbum = this._validateParam_userAlbum(userInitialAlbum, "userInitialAlbum", userAlbumInvalidCharsRegExp);
 
         this._cookieForFilesRemoving = this._validateParam_cookieName(cookieForFilesRemoving);
         this._cookieForFilesUploading = this._validateParam_cookieName(cookieForFilesUploading);
@@ -303,11 +303,11 @@ class MediaGalleryServer {
 //====================================================
 //Constructot params validation:
 
-    _validateParam_galleryFolder(paramValue, paramName, folderNameRegExp) {
+    _validateParam_userAlbum(paramValue, paramName, invalidCharsRegExp) {
         if(paramValue===undefined || paramValue===null || paramValue===false) throw new Error(this._createErrorMessage(this._ERR_CONSTRUCTOR_PARAM, paramName));
 
         const stringedParam = String(paramValue).trim();
-        if(stringedParam.match(folderNameRegExp)) throw new Error(this._createErrorMessage(this._ERR_CONSTRUCTOR_PARAM, paramName));
+        if(stringedParam.match(invalidCharsRegExp)) throw new Error(this._createErrorMessage(this._ERR_CONSTRUCTOR_PARAM, paramName));
 
         return stringedParam;
     }
@@ -474,7 +474,7 @@ class MediaGalleryServer {
                                 //Ищем, нет ли уже такой папки, и если нет, то создаём её:
                                 this._fs.access(userFilesDirPath, (err) => {
                                     if(err) {//Папка не найдена, можно создавать
-                                        const userImagesPath = userFilesDirPath + "/images/" + this._defaultCurrentGalleryFolder;
+                                        const userImagesPath = userFilesDirPath + "/images/" + this._userInitialAlbum;
                                         const userLogsPath = userFilesDirPath + "/logs";
                                         const userTempPath = userFilesDirPath + "/temp";
       
