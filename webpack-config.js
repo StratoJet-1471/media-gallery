@@ -17,7 +17,7 @@ module.exports = {
                 from: "src",
                 to: "",
                 ignore: [
-                          "*.jsx", "*.js", "*.json", "*.txt", "**/css/**", "**/components/**"
+                          "*.jsx", "*.js", "*.json", "*.txt", "**/css/**", "**/components/**", "**/design_elements/**", "**/react-redux-store/**"
                 ]
             }
         ])
